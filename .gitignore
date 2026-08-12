@@ -1,0 +1,34 @@
+# Build
+bin/
+obj/
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+
+# VS Code
+.vscode/
+
+# User-specific files
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local configuration
+appsettings.Development.json
+client.config.json
+
+# Environment files
+.env
+.env.*
+
+# Test results
+[Tt]est[Rr]esult*/
