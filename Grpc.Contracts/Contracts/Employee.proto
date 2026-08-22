@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package employee;
+
+option csharp_namespace = "Grpc.Contracts";
+
+service Talk
+{
+  rpc Smalltalk(WordRequest) returns (WordResponse);
+}
+
+message WordRequest
+{
+  string word = 1;
+}
+
+message WordResponse
+{
+  string word = 1;
+}
