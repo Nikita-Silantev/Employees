@@ -4,17 +4,18 @@ package employee;
 
 option csharp_namespace = "Grpc.Contracts";
 
-service Talk
+service Employees
 {
-  rpc Smalltalk(WordRequest) returns (WordResponse);
+  rpc CreateDepartment(RequestData) returns (ResponceDepartment);
 }
 
-message WordRequest
+message RequestData
 {
-  string word = 1;
+  int32 id = 1;
+  string Name = 2;
 }
 
-message WordResponse
+message ResponceDepartment
 {
-  string word = 1;
+  string description = 1;
 }

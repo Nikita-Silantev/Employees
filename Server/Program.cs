@@ -6,6 +6,6 @@ builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-app.MapGrpcService<TalkService>();
+app.MapGrpcService<EmployeeService>();
 
 app.Run();
