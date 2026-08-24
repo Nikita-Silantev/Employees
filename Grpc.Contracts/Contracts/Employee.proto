@@ -7,6 +7,10 @@ option csharp_namespace = "Grpc.Contracts";
 service Employees
 {
   rpc CreateDepartment(RequestData) returns (ResponceDepartment);
+  rpc GetAllDepartments(EmptyRequest) returns (AllDepartment);
+  rpc UpdateDepartment(ForUpdateDataDepartment) returns (UpdatetDepartment);
+  rpc DeleteDepartment(ForDeleteDepartment) returns (StatusDelete);
+  
 }
 
 message RequestData
@@ -18,4 +22,42 @@ message RequestData
 message ResponceDepartment
 {
   string description = 1;
+}
+
+message EmptyRequest
+{
+  
+}
+
+message DepartmentItem
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message AllDepartment
+{
+  repeated DepartmentItem departments = 1;
+}
+
+message ForUpdateDataDepartment
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message UpdatetDepartment
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message StatusDelete
+{
+  string status = 1;
+}
+
+message ForDeleteDepartment
+{
+  int32 id = 1;
 }
