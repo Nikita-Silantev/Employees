@@ -160,4 +160,132 @@ public class EmployeeRepository
     }
 
     #endregion
+
+    #region должность
+
+    /// <summary>
+    /// Создание объект должности
+    /// </summary>
+    /// <param name="post"></param>
+    /// <returns></returns>
+    public async Task<Post> CreatePost(Post post)
+    {
+        try
+        {
+            await using var connection = CreateConnection();
+            await connection.OpenAsync();
+
+            const string sql = "insert into post (name, salary) values (@name, @salary) returning id, name, salary;";
+            await using var command = new NpgsqlCommand(sql, connection);
+
+            command.Parameters.AddWithValue("name", post.Name);
+            command.Parameters.AddWithValue("salary", post.Salary);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            Post response = new Post();
+
+            if (!await reader.ReadAsync())
+            {
+                return null;
+            }
+
+            response.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            response.Name = reader.GetString(reader.GetOrdinal("name"));
+            response.Salary = reader.GetInt32(reader.GetOrdinal("salary"));
+            return response;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Выдать все должности
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Post>> GetAllPosts()
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "SELECT * FROM post";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+
+        await using var reader = command.ExecuteReader();
+
+
+        List<Post> posts = new List<Post>();
+
+        while (await reader.ReadAsync())
+        {
+            Post post = new Post();
+            post.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            post.Name = reader.GetString(reader.GetOrdinal("name"));
+            post.Salary = reader.GetInt32(reader.GetOrdinal("salary"));
+            posts.Add(post);
+        }
+
+        return posts;
+    }
+
+    /// <summary>
+    /// Обносить должность по Id
+    /// </summary>
+    /// <param name="post"></param>
+    /// <returns></returns>
+    public async Task<Post> UpdatePost(Post post)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "update post set name = @name, salary = @salary where id = @id returning id, name, salary;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", post.Id);
+        command.Parameters.AddWithValue("name", post.Name);
+        command.Parameters.AddWithValue("salary", post.Salary);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        Console.WriteLine($"ID: {post.Id}");
+        Console.WriteLine($"Name: {post.Name}");
+        Console.WriteLine($"Salary: {post.Salary}");
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+
+        var newPost = new Post
+        {
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            Name = reader.GetString(reader.GetOrdinal("name")),
+            Salary = reader.GetInt32(reader.GetOrdinal("salary")),
+        };
+
+        return newPost;
+    }
+
+    /// <summary>
+    /// Удаление должности
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<string> DeletePost(int id)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "delete from post where id = @id;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", id);
+
+        await command.ExecuteNonQueryAsync();
+        return "OK";
+    }
+
+    #endregion
 }

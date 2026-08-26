@@ -11,6 +11,61 @@ service Employees
   rpc UpdateDepartment(ForUpdateDataDepartment) returns (UpdatetDepartment);
   rpc DeleteDepartment(ForDeleteDepartment) returns (StatusDelete);
   
+  rpc CreatePost(NewPost) returns (CreatedPost);
+  rpc GetAllPosts(EmptyRequest) returns (AllPosts);
+  rpc UpdatePost(NewVersionPost) returns (UpdatedPost);
+  rpc DeletePost(DeletedPost) returns (MessageDeletePost);
+}
+
+message MessageDeletePost
+{
+  string message = 1;
+}
+
+message DeletedPost
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
+}
+
+message UpdatedPost
+{
+  int32 id = 1;
+  string name = 2;
+  int32 salary = 3;
+}
+
+message NewVersionPost
+{
+  int32 id = 1;
+  string name = 2;
+  int32 salary = 3;
+}
+
+message Posts
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
+}
+
+message AllPosts
+{
+  repeated Posts posts = 1;
+}
+
+message NewPost
+{
+  string Name = 1;
+  int32 Salary = 2;
+}
+
+message CreatedPost
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
 }
 
 message RequestData
