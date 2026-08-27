@@ -2,7 +2,7 @@
 /// <summary>
 /// Задача (над которой работает пользователь) - Id, название, дата начала, дата конца
 /// </summary>
-public class Task
+public class EmpTask
 {
     public int Id { get; set; }
     public string Name { get; set; }

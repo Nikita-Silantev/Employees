@@ -288,4 +288,123 @@ public class EmployeeRepository
     }
 
     #endregion
+
+    #region задачи
+
+    /// <summary>
+    /// Создать задачу
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public async Task<EmpTask> CreateTask(EmpTask task)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql =
+            "insert into task (name, date_start, date_end) values (@name, @date_start, @date_end) returning id, name, date_start, date_end;";
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("name", task.Name);
+        command.Parameters.AddWithValue("date_start", task.Date_Started);
+        command.Parameters.AddWithValue("date_end", task.Date_End);
+
+        await using var reader = command.ExecuteReader();
+
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+        var response = new EmpTask
+        {
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            Name = reader.GetString(reader.GetOrdinal("name")),
+            Date_Started = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_start")),
+            Date_End = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_end")),
+        };
+        return response;
+    }
+
+    /// <summary>
+    /// Выдать все задачи
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<EmpTask>> GetAllTasks()
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "SELECT * FROM task";
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = command.ExecuteReader();
+
+        List<EmpTask> tasks = new List<EmpTask>();
+
+        while (await reader.ReadAsync())
+        {
+            var r = new EmpTask();
+            r.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            r.Name = reader.GetString(reader.GetOrdinal("name"));
+            r.Date_Started = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_start"));
+            r.Date_End = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_end"));
+            tasks.Add(r);
+        }
+
+        return tasks;
+    }
+
+    /// <summary>
+    /// обновить задачу
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public async Task<EmpTask> UpdateTask(EmpTask task)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql =
+            "update task set name = @name, date_start = @date_start, date_end = @date_end where id = @id returning id, name, date_start, date_end;";
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", task.Id);
+        command.Parameters.AddWithValue("name", task.Name);
+        command.Parameters.AddWithValue("date_start", task.Date_Started);
+        command.Parameters.AddWithValue("date_end", task.Date_End);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+        var response = new EmpTask
+        {
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            Name = reader.GetString(reader.GetOrdinal("name")),
+            Date_Started = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_start")),
+            Date_End = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_end")),
+        };
+        return response;
+    }
+
+    /// <summary>
+    /// удалить задачу
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<string> DeleteTask(int id)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "delete from task where id = @id;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", id);
+        await command.ExecuteNonQueryAsync();
+        return "OK";
+    }
+
+    #endregion
 }

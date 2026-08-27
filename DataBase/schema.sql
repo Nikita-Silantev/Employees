@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 24uecjNrWolclarRtrEeWAuaHt4SB64nzeNI35a5EQh8C6zjbjG0DVn0gfpfLwB
+\restrict mAfM8SpY1tufFPVC31NCz04oztv65rnPdaWKgP4UDJn5x9cNpt3e1PJ1IfsaNhP
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -85,6 +85,38 @@ ALTER SEQUENCE public.post_id_seq OWNED BY public.post.id;
 
 
 --
+-- Name: task; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.task (
+    id integer NOT NULL,
+    name character varying(100),
+    date_start date,
+    date_end date
+);
+
+
+--
+-- Name: task_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.task_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.task_id_seq OWNED BY public.task.id;
+
+
+--
 -- Name: department id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -96,6 +128,13 @@ ALTER TABLE ONLY public.department ALTER COLUMN id SET DEFAULT nextval('public.d
 --
 
 ALTER TABLE ONLY public.post ALTER COLUMN id SET DEFAULT nextval('public.post_id_seq'::regclass);
+
+
+--
+-- Name: task id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task ALTER COLUMN id SET DEFAULT nextval('public.task_id_seq'::regclass);
 
 
 --
@@ -115,8 +154,16 @@ ALTER TABLE ONLY public.post
 
 
 --
+-- Name: task task_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.task
+    ADD CONSTRAINT task_pkey PRIMARY KEY (id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 24uecjNrWolclarRtrEeWAuaHt4SB64nzeNI35a5EQh8C6zjbjG0DVn0gfpfLwB
+\unrestrict mAfM8SpY1tufFPVC31NCz04oztv65rnPdaWKgP4UDJn5x9cNpt3e1PJ1IfsaNhP
 

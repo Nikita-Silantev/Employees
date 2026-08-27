@@ -229,4 +229,108 @@ public class EmployeeService : Employees.EmployeesBase
     }
 
     #endregion
+
+    #region задачи
+/// <summary>
+/// Создать задачу
+/// </summary>
+/// <param name="request"></param>
+/// <param name="context"></param>
+/// <returns></returns>
+    public override async Task<CreatedTask> CreateTask(NewTask request, ServerCallContext context)
+    {
+        var response = new CreatedTask();
+        var tempTask = new EmpTask();
+        tempTask.Id = 0;
+        tempTask.Name = request.Name;
+        tempTask.Date_Started = DateOnly.Parse(request.DateStarted);
+        tempTask.Date_End = DateOnly.Parse(request.DateEnd);
+        
+        var repos = new EmployeeRepository();
+        var createdTask = await repos.CreateTask(tempTask);
+        response.Id = createdTask.Id;
+        response.Name = createdTask.Name;
+        response.DateStarted = createdTask.Date_Started.ToString("yyyy-MM-dd");
+        response.DateEnd = createdTask.Date_End.ToString("yyyy-MM-dd");
+        return response;
+    }
+/// <summary>
+/// выдать все задачи
+/// </summary>
+/// <param name="request"></param>
+/// <param name="context"></param>
+/// <returns></returns>
+    public override async Task<AllTasks> GetAllTasks(EmptyRequest request, ServerCallContext context)
+    {
+        var response = new AllTasks();
+        var ListTasks = new List<EmpTask>();
+        
+        var repos = new EmployeeRepository();
+
+        ListTasks = await repos.GetAllTasks();
+
+        foreach (EmpTask t in ListTasks)
+        {
+            response.AllTasks_.Add(new AllTaskItem
+            {
+                Id = t.Id,
+                Name = t.Name,
+                DateStarted = t.Date_Started.ToString("yyyy-MM-dd"),
+                DateEnd = t.Date_End.ToString("yyyy-MM-dd")
+            });
+        }
+        return response;
+    }
+/// <summary>
+/// обносить задачу
+/// </summary>
+/// <param name="request"></param>
+/// <param name="context"></param>
+/// <returns></returns>
+    public override async Task<UpdatedTask> UpdateTask(NewTaskData request, ServerCallContext context)
+    {
+        var needUpdateTask = new EmpTask();
+        needUpdateTask.Id = request.Id;
+        needUpdateTask.Name = request.Name;
+        needUpdateTask.Date_Started = DateOnly.Parse(request.DateStarted);
+        needUpdateTask.Date_End = DateOnly.Parse(request.DateEnd);
+
+        var repos = new EmployeeRepository();
+        
+        var updatedTask = await repos.UpdateTask(needUpdateTask);
+        
+        var response = new UpdatedTask
+        {
+            Id = updatedTask.Id,
+            Name = updatedTask.Name,
+            DateStarted = updatedTask.Date_Started.ToString("yyyy-MM-dd"),
+            DateEnd = updatedTask.Date_End.ToString("yyyy-MM-dd")
+        };
+        return response;
+    }
+/// <summary>
+/// удалить задачу
+/// </summary>
+/// <param name="request"></param>
+/// <param name="context"></param>
+/// <returns></returns>
+    public override async Task<MessageDeleteTask> DeleteTask(DeletedTask request, ServerCallContext context)
+    {
+        var delTask = new EmpTask
+        {
+            Id = request.Id,
+            Name = request.Name,
+            Date_Started = DateOnly.Parse(request.DateStarted),
+            Date_End = DateOnly.Parse(request.DateEnd)
+        };
+
+        var repos = new EmployeeRepository();
+        
+        await repos.DeleteTask(delTask.Id);
+
+        var response = new MessageDeleteTask();
+        response.Message = "Succsessful deleted task!";
+        return response;
+    }
+    #endregion
 }

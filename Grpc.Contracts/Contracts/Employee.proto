@@ -15,6 +15,68 @@ service Employees
   rpc GetAllPosts(EmptyRequest) returns (AllPosts);
   rpc UpdatePost(NewVersionPost) returns (UpdatedPost);
   rpc DeletePost(DeletedPost) returns (MessageDeletePost);
+  
+  rpc CreateTask(NewTask) returns (CreatedTask);
+  rpc GetAllTasks(EmptyRequest) returns (AllTasks);
+  rpc UpdateTask(NewTaskData) returns (UpdatedTask);
+  rpc DeleteTask(DeletedTask) returns (MessageDeleteTask);
+}
+
+message MessageDeleteTask
+{
+  string message = 1;
+}
+
+message DeletedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message UpdatedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message NewTaskData
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message AllTasks
+{
+  repeated AllTaskItem allTasks = 1;
+}
+
+message AllTaskItem
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message CreatedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message NewTask
+{
+  string Name = 1;
+  string Date_Started = 2;
+  string Date_End = 3;
 }
 
 message MessageDeletePost
