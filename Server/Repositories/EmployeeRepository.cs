@@ -5,22 +5,21 @@ namespace Server.Repositories;
 
 public class EmployeeRepository
 {
+    private readonly IConfiguration _configuration;
+    
+    public EmployeeRepository(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     /// <summary>
     /// Создать подключение
     /// </summary>
     /// <returns></returns>
     private NpgsqlConnection CreateConnection()
     {
-        var builder = new NpgsqlConnectionStringBuilder
-        {
-            Host = "localhost",
-            Port = 5432,
-            Database = "employees",
-            Username = "postgres",
-            Password = "admin",
-        };
+        var connectionString =
+            _configuration.GetConnectionString("EmployeesDatabase");
 
-        string connectionString = builder.ConnectionString;
         return new NpgsqlConnection(connectionString);
     }
 
@@ -404,6 +403,157 @@ public class EmployeeRepository
         command.Parameters.AddWithValue("id", id);
         await command.ExecuteNonQueryAsync();
         return "OK";
+    }
+
+    #endregion
+
+    #region сотрудники
+
+    /// <summary>
+    /// Создание сотрудника
+    /// </summary>
+    /// <param name="employee"></param>
+    /// <returns></returns>
+    public async Task<Employee> CreateEmployee(Employee employee)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql =
+            "insert into employee (f_name, l_name, m_name, date_birth, id_department, id_post, id_task, rate) values (@f_name, @l_name, @m_name, @date_birth, @id_department, @id_post, @id_task, @rate) returning id, f_name, l_name, m_name, date_birth, id_department, id_post, id_task, rate;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("id", employee.Id);
+        command.Parameters.AddWithValue("f_name", employee.FirstName);
+        command.Parameters.AddWithValue("l_name", employee.LastName);
+        command.Parameters.AddWithValue("m_name", employee.MiddleName);
+        command.Parameters.AddWithValue("date_birth", employee.Date_Birth);
+        command.Parameters.AddWithValue("id_department", employee.Id_Department);
+        command.Parameters.AddWithValue("id_post", employee.Id_Post);
+        command.Parameters.AddWithValue("id_task", employee.Id_Task);
+        command.Parameters.AddWithValue("rate", employee.Rate);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+        var createdEmployee = new Employee
+        {
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            FirstName = reader.GetString(reader.GetOrdinal("f_name")),
+            MiddleName = reader.GetString(reader.GetOrdinal("l_name")),
+            LastName = reader.GetString(reader.GetOrdinal("m_name")),
+            Date_Birth = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_birth")),
+            Id_Department = reader.GetInt32(reader.GetOrdinal("id_department")),
+            Id_Post = reader.GetInt32(reader.GetOrdinal("id_post")),
+            Id_Task = reader.GetInt32(reader.GetOrdinal("id_task")),
+            Rate = reader.GetDecimal(reader.GetOrdinal("rate")),
+        };
+
+        return createdEmployee;
+    }
+
+    /// <summary>
+    /// проверка существования отдела
+    /// </summary>
+    /// <param name="id_department"></param>
+    /// <returns></returns>
+    public async Task<bool> CheckDepartment(int id_department)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+        const string sql = "select id from department;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        List<int> ids = new List<int>();
+
+        while (await reader.ReadAsync())
+        {
+            int id = reader.GetInt32(reader.GetOrdinal("id"));
+            ids.Add(id);
+        }
+
+        foreach (var id in ids)
+        {
+            if (id == id_department)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// проверка существования должноси
+    /// </summary>
+    /// <param name="id_post"></param>
+    /// <returns></returns>
+    public async Task<bool> CheckPost(int id_post)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+        const string sql = "select id from post;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        List<int> ids = new List<int>();
+
+        while (await reader.ReadAsync())
+        {
+            int id = reader.GetInt32(reader.GetOrdinal("id"));
+            ids.Add(id);
+        }
+
+        foreach (var id in ids)
+        {
+            if (id == id_post)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// проверка существования задачи
+    /// </summary>
+    /// <param name="id_task"></param>
+    /// <returns></returns>
+    public async Task<bool> CheckTask(int id_task)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+        const string sql = "select id from task;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        List<int> ids = new List<int>();
+
+        while (await reader.ReadAsync())
+        {
+            int id = reader.GetInt32(reader.GetOrdinal("id"));
+            ids.Add(id);
+        }
+
+        foreach (var id in ids)
+        {
+            if (id == id_task)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #endregion

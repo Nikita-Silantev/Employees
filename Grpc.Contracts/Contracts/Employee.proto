@@ -20,6 +20,39 @@ service Employees
   rpc GetAllTasks(EmptyRequest) returns (AllTasks);
   rpc UpdateTask(NewTaskData) returns (UpdatedTask);
   rpc DeleteTask(DeletedTask) returns (MessageDeleteTask);
+  
+  rpc CreateEmployee(NewEmployee) returns (CreatedEmployee);
+}
+
+message ItemCreatedEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message CreatedEmployee
+{
+  string message = 1;
+  repeated ItemCreatedEmployee itemEmployee = 2;
+}
+
+message NewEmployee
+{
+  string f_name = 1;
+  string l_name = 2;
+  string m_name = 3;
+  string date_birth = 4;
+  int32 id_department = 5;
+  int32 id_post = 6;
+  int32 id_task = 7;
+  string rate = 8;
 }
 
 message MessageDeleteTask
