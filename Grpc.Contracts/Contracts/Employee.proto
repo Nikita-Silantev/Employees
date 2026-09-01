@@ -22,6 +22,63 @@ service Employees
   rpc DeleteTask(DeletedTask) returns (MessageDeleteTask);
   
   rpc CreateEmployee(NewEmployee) returns (CreatedEmployee);
+  rpc GetAllEmployee(EmptyRequest) returns (AllEmployees);
+  rpc UpdateEmployee(NewEmployeeVersion) returns (UpdatedEmployee);
+  rpc DeleteEmployee(DeleteEmployeeData) returns (DeleteMessage);
+}
+
+message DeleteMessage
+{
+  string message = 1;
+}
+
+message DeleteEmployeeData
+{
+  int32 id = 1;
+}
+
+message UpdatedEmployee
+{
+  int32 Id = 1;
+  string F_name = 2;
+  string L_name = 3;
+  string M_name = 4;
+  string Date_birth = 5;
+  int32 Id_department = 6;
+  int32 Id_post = 7;
+  int32 Id_task = 8;
+  string Rate = 9;
+}
+
+message NewEmployeeVersion
+{
+  int32 Id = 1;
+  string F_name = 2;
+  string L_name = 3;
+  string M_name = 4;
+  string Date_birth = 5;
+  int32 Id_department = 6;
+  int32 Id_post = 7;
+  int32 Id_task = 8;
+  string Rate = 9;
+}
+
+message ItemEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message AllEmployees
+{
+  repeated ItemEmployee Employees = 1;
 }
 
 message ItemCreatedEmployee
@@ -133,9 +190,9 @@ message UpdatedPost
 
 message NewVersionPost
 {
-  int32 id = 1;
-  string name = 2;
-  int32 salary = 3;
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
 }
 
 message Posts

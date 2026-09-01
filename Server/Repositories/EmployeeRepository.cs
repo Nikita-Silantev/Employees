@@ -6,11 +6,12 @@ namespace Server.Repositories;
 public class EmployeeRepository
 {
     private readonly IConfiguration _configuration;
-    
+
     public EmployeeRepository(IConfiguration configuration)
     {
         _configuration = configuration;
     }
+
     /// <summary>
     /// Создать подключение
     /// </summary>
@@ -251,6 +252,7 @@ public class EmployeeRepository
         Console.WriteLine($"ID: {post.Id}");
         Console.WriteLine($"Name: {post.Name}");
         Console.WriteLine($"Salary: {post.Salary}");
+
         if (!await reader.ReadAsync())
         {
             return null;
@@ -554,6 +556,132 @@ public class EmployeeRepository
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Выдать всех сотрудников
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Employee>> GetAllEmployees()
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "select * from employee;";
+
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync();
+
+        var employees = new List<Employee>();
+
+        while (await reader.ReadAsync())
+        {
+            var itemEmp = new Employee();
+            itemEmp.Id = reader.GetInt32(reader.GetOrdinal("id"));
+            itemEmp.FirstName = reader.GetString(reader.GetOrdinal("f_name"));
+            itemEmp.MiddleName = reader.GetString(reader.GetOrdinal("l_name"));
+            itemEmp.LastName = reader.GetString(reader.GetOrdinal("m_name"));
+            itemEmp.Date_Birth = reader.GetFieldValue<DateOnly>(reader.GetOrdinal("date_birth"));
+            itemEmp.Id_Department = reader.GetInt32(reader.GetOrdinal("id_department"));
+            itemEmp.Id_Post = reader.GetInt32(reader.GetOrdinal("id_post"));
+            itemEmp.Id_Task = reader.GetInt32(reader.GetOrdinal("id_task"));
+            itemEmp.Rate = reader.GetDecimal(reader.GetOrdinal("rate"));
+            employees.Add(itemEmp);
+        }
+
+        return employees;
+    }
+
+    /// <summary>
+    /// Обновить сотрудника
+    /// </summary>
+    /// <param name="employee"></param>
+    /// <returns></returns>
+    public async Task<Employee> UpdateEmployee(Employee employee)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = """
+                           update employee
+                           set
+                               f_name = @f_name,
+                               l_name = @l_name,
+                               m_name = @m_name,
+                               date_birth = @date_birth,
+                               id_department = @id_department,
+                               id_post = @id_post,
+                               id_task = @id_task,
+                               rate = @rate
+                           where id = @id
+                           returning id, f_name, l_name, m_name, date_birth,
+                                     id_department, id_post, id_task, rate;
+                           """;
+
+        await using var command = new NpgsqlCommand(sql, connection);
+
+        command.Parameters.AddWithValue("id", employee.Id);
+        command.Parameters.AddWithValue("f_name", employee.FirstName);
+        command.Parameters.AddWithValue("l_name", employee.LastName);
+        command.Parameters.AddWithValue("m_name", employee.MiddleName);
+        command.Parameters.AddWithValue("date_birth", employee.Date_Birth);
+        command.Parameters.AddWithValue("id_department", employee.Id_Department);
+        command.Parameters.AddWithValue("id_post", employee.Id_Post);
+        command.Parameters.AddWithValue("id_task", employee.Id_Task);
+        command.Parameters.AddWithValue("rate", employee.Rate);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+        var updated = new Employee
+        {
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            FirstName = reader.GetString(reader.GetOrdinal("f_name")),
+            MiddleName = reader.GetString(reader.GetOrdinal("m_name")),
+            LastName = reader.GetString(reader.GetOrdinal("l_name")),
+            Date_Birth = reader.GetFieldValue<DateOnly>(
+                reader.GetOrdinal("date_birth")),
+            Id_Department = reader.GetInt32(
+                reader.GetOrdinal("id_department")),
+            Id_Post = reader.GetInt32(
+                reader.GetOrdinal("id_post")),
+            Id_Task = reader.GetInt32(
+                reader.GetOrdinal("id_task")),
+            Rate = reader.GetDecimal(reader.GetOrdinal("rate"))
+        };
+
+        return updated;
+    }
+
+    /// <summary>
+    /// Удалить сотрудника
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<string> DeleteEmployee(int id)
+    {
+        await using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        const string sql = "delete from employee where id = @id";
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", id);
+        string result;
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+            result = "success";
+        }
+        catch (Exception e)
+        {
+            result = $"error {e.Message}";
+        }
+
+        return result;
     }
 
     #endregion

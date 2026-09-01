@@ -3,6 +3,7 @@ using Grpc.Core;
 using Server.Models;
 using Server.Repositories;
 using System.Globalization;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Server.Services;
 
@@ -14,6 +15,7 @@ public class EmployeeService : Employees.EmployeesBase
     {
         _repository = repository;
     }
+
     #region отделы
 
     /// <summary>
@@ -188,7 +190,7 @@ public class EmployeeService : Employees.EmployeesBase
 
         if (updatedPost == null)
         {
-            throw new Exception("Post not found");
+            Console.WriteLine("Похоже в сервис пришло 0");
         }
 
         response.Id = updatedPost.Id;
@@ -214,7 +216,6 @@ public class EmployeeService : Employees.EmployeesBase
 
         try
         {
-
             var deletedPost = await _repository.DeletePost(needDeletePost.Id);
             response.Message = "Succsessful!";
             return response;
@@ -401,6 +402,86 @@ public class EmployeeService : Employees.EmployeesBase
 
         response.Message = "Succsessful created employee!";
         response.ItemEmployee.Add(tempResponseEmployee);
+        return response;
+    }
+
+    /// <summary>
+    /// Выдать всех сотрудников
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public override async Task<AllEmployees> GetAllEmployee(EmptyRequest request, ServerCallContext context)
+    {
+        var response = new AllEmployees();
+        var allEmployees = new List<Employee>();
+
+        allEmployees = await _repository.GetAllEmployees();
+
+        foreach (Employee emp in allEmployees)
+        {
+            response.Employees.Add(new ItemEmployee
+            {
+                Id = emp.Id,
+                FName = emp.FirstName,
+                MName = emp.MiddleName,
+                LName = emp.LastName,
+                DateBirth = emp.Date_Birth.ToString("yyyy-MM-dd"),
+                IdDepartment = emp.Id_Department,
+                IdPost = emp.Id_Post,
+                IdTask = emp.Id_Task,
+                Rate = emp.Rate.ToString("F2", CultureInfo.InvariantCulture)
+            });
+        }
+
+        return response;
+    }
+
+    /// <summary>
+    /// Обновить сотрудника
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public async override Task<UpdatedEmployee> UpdateEmployee(NewEmployeeVersion request, ServerCallContext context)
+    {
+        var response = new UpdatedEmployee();
+        var newemp = new Employee();
+
+        newemp.Id = request.Id;
+        newemp.FirstName = request.FName;
+        newemp.MiddleName = request.MName;
+        newemp.LastName = request.LName;
+        newemp.Date_Birth = DateOnly.Parse(request.DateBirth);
+        newemp.Id_Department = request.IdDepartment;
+        newemp.Id_Post = request.IdPost;
+        newemp.Id_Task = request.IdTask;
+        newemp.Rate = Decimal.Parse(request.Rate);
+
+        var updatedEmployee = await _repository.UpdateEmployee(newemp);
+        response.Id = updatedEmployee.Id;
+        response.FName = updatedEmployee.FirstName;
+        response.LName = updatedEmployee.LastName;
+        response.MName = updatedEmployee.MiddleName;
+        response.DateBirth = updatedEmployee.Date_Birth.ToString("yyyy-MM-dd");
+        response.IdDepartment = updatedEmployee.Id_Department;
+        response.IdPost = updatedEmployee.Id_Post;
+        response.IdTask = updatedEmployee.Id_Task;
+        response.Rate = updatedEmployee.Rate.ToString("F2", CultureInfo.InvariantCulture);
+        return response;
+    }
+
+    /// <summary>
+    /// удалить сотрудника
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public async override Task<DeleteMessage> DeleteEmployee(DeleteEmployeeData request, ServerCallContext context)
+    {
+        var response = new DeleteMessage();
+        var message = await _repository.DeleteEmployee(request.Id);
+        response.Message = message;
         return response;
     }
 
