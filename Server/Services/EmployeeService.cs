@@ -446,8 +446,37 @@ public class EmployeeService : Employees.EmployeesBase
     public async override Task<UpdatedEmployee> UpdateEmployee(NewEmployeeVersion request, ServerCallContext context)
     {
         var response = new UpdatedEmployee();
-        var newemp = new Employee();
+        
+        var causeDepartment = _repository.CheckDepartment(request.IdDepartment);
+        if (await causeDepartment == false)
+        {
+            response.Message = "Inputted department not exists!";
+            return response;
+        }
 
+        var causePost = _repository.CheckPost(request.IdPost);
+        if (await causePost == false)
+        {
+            response.Message = "Inputted post not exists!";
+            return response;
+        }
+
+        var causeTask = _repository.CheckTask(request.IdTask);
+        if (await causeTask == false)
+        {
+            response.Message = "Inputted task not exists!";
+            return response;
+        }
+        
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        var DateEmployee = DateOnly.Parse(request.DateBirth);
+        if (DateEmployee > today.AddYears(-18))
+        {
+            response.Message = "Age little 18!";
+            return response;
+        }
+        
+        var newemp = new Employee();
         newemp.Id = request.Id;
         newemp.FirstName = request.FName;
         newemp.MiddleName = request.MName;
@@ -459,15 +488,20 @@ public class EmployeeService : Employees.EmployeesBase
         newemp.Rate = Decimal.Parse(request.Rate);
 
         var updatedEmployee = await _repository.UpdateEmployee(newemp);
-        response.Id = updatedEmployee.Id;
-        response.FName = updatedEmployee.FirstName;
-        response.LName = updatedEmployee.LastName;
-        response.MName = updatedEmployee.MiddleName;
-        response.DateBirth = updatedEmployee.Date_Birth.ToString("yyyy-MM-dd");
-        response.IdDepartment = updatedEmployee.Id_Department;
-        response.IdPost = updatedEmployee.Id_Post;
-        response.IdTask = updatedEmployee.Id_Task;
-        response.Rate = updatedEmployee.Rate.ToString("F2", CultureInfo.InvariantCulture);
+        
+        var tempResponseEmployee = new ItemUpdatedEmployee();
+        tempResponseEmployee.Id = updatedEmployee.Id;
+        tempResponseEmployee.FName = updatedEmployee.FirstName;
+        tempResponseEmployee.MName = updatedEmployee.MiddleName;
+        tempResponseEmployee.LName = updatedEmployee.LastName;
+        tempResponseEmployee.DateBirth = updatedEmployee.Date_Birth.ToString("yyyy-MM-dd");
+        tempResponseEmployee.IdDepartment = updatedEmployee.Id_Department;
+        tempResponseEmployee.IdPost = updatedEmployee.Id_Post;
+        tempResponseEmployee.IdTask = updatedEmployee.Id_Task;
+        tempResponseEmployee.Rate = updatedEmployee.Rate.ToString("F2", CultureInfo.InvariantCulture);
+        
+        response.Message = "Succsessful update employee!";
+        response.Employee.Add(tempResponseEmployee);
         return response;
     }
 

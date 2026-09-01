@@ -37,30 +37,36 @@ message DeleteEmployeeData
   int32 id = 1;
 }
 
+message ItemUpdatedEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
 message UpdatedEmployee
 {
-  int32 Id = 1;
-  string F_name = 2;
-  string L_name = 3;
-  string M_name = 4;
-  string Date_birth = 5;
-  int32 Id_department = 6;
-  int32 Id_post = 7;
-  int32 Id_task = 8;
-  string Rate = 9;
+  string message = 1;
+  repeated ItemUpdatedEmployee employee = 2;
 }
 
 message NewEmployeeVersion
 {
-  int32 Id = 1;
-  string F_name = 2;
-  string L_name = 3;
-  string M_name = 4;
-  string Date_birth = 5;
-  int32 Id_department = 6;
-  int32 Id_post = 7;
-  int32 Id_task = 8;
-  string Rate = 9;
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
 }
 
 message ItemEmployee
