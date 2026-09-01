@@ -2,9 +2,9 @@
 /// <summary>
 /// Должность - Id, название, зарплата
 /// </summary>
-public class Position
+public class Post
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public decimal Salary { get; set; }
+    public int Salary { get; set; }
 }

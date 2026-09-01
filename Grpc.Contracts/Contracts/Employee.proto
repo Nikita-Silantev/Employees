@@ -7,6 +7,223 @@ option csharp_namespace = "Grpc.Contracts";
 service Employees
 {
   rpc CreateDepartment(RequestData) returns (ResponceDepartment);
+  rpc GetAllDepartments(EmptyRequest) returns (AllDepartment);
+  rpc UpdateDepartment(ForUpdateDataDepartment) returns (UpdatetDepartment);
+  rpc DeleteDepartment(ForDeleteDepartment) returns (StatusDelete);
+  
+  rpc CreatePost(NewPost) returns (CreatedPost);
+  rpc GetAllPosts(EmptyRequest) returns (AllPosts);
+  rpc UpdatePost(NewVersionPost) returns (UpdatedPost);
+  rpc DeletePost(DeletedPost) returns (MessageDeletePost);
+  
+  rpc CreateTask(NewTask) returns (CreatedTask);
+  rpc GetAllTasks(EmptyRequest) returns (AllTasks);
+  rpc UpdateTask(NewTaskData) returns (UpdatedTask);
+  rpc DeleteTask(DeletedTask) returns (MessageDeleteTask);
+  
+  rpc CreateEmployee(NewEmployee) returns (CreatedEmployee);
+  rpc GetAllEmployee(EmptyRequest) returns (AllEmployees);
+  rpc UpdateEmployee(NewEmployeeVersion) returns (UpdatedEmployee);
+  rpc DeleteEmployee(DeleteEmployeeData) returns (DeleteMessage);
+}
+
+message DeleteMessage
+{
+  string message = 1;
+}
+
+message DeleteEmployeeData
+{
+  int32 id = 1;
+}
+
+message ItemUpdatedEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message UpdatedEmployee
+{
+  string message = 1;
+  repeated ItemUpdatedEmployee employee = 2;
+}
+
+message NewEmployeeVersion
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message ItemEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message AllEmployees
+{
+  repeated ItemEmployee Employees = 1;
+}
+
+message ItemCreatedEmployee
+{
+  int32 id = 1;
+  string f_name = 2;
+  string l_name = 3;
+  string m_name = 4;
+  string date_birth = 5;
+  int32 id_department = 6;
+  int32 id_post = 7;
+  int32 id_task = 8;
+  string rate = 9;
+}
+
+message CreatedEmployee
+{
+  string message = 1;
+  repeated ItemCreatedEmployee itemEmployee = 2;
+}
+
+message NewEmployee
+{
+  string f_name = 1;
+  string l_name = 2;
+  string m_name = 3;
+  string date_birth = 4;
+  int32 id_department = 5;
+  int32 id_post = 6;
+  int32 id_task = 7;
+  string rate = 8;
+}
+
+message MessageDeleteTask
+{
+  string message = 1;
+}
+
+message DeletedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message UpdatedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message NewTaskData
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message AllTasks
+{
+  repeated AllTaskItem allTasks = 1;
+}
+
+message AllTaskItem
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message CreatedTask
+{
+  int32 Id = 1;
+  string Name = 2;
+  string Date_Started = 3;
+  string Date_End = 4;
+}
+
+message NewTask
+{
+  string Name = 1;
+  string Date_Started = 2;
+  string Date_End = 3;
+}
+
+message MessageDeletePost
+{
+  string message = 1;
+}
+
+message DeletedPost
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
+}
+
+message UpdatedPost
+{
+  int32 id = 1;
+  string name = 2;
+  int32 salary = 3;
+}
+
+message NewVersionPost
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
+}
+
+message Posts
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
+}
+
+message AllPosts
+{
+  repeated Posts posts = 1;
+}
+
+message NewPost
+{
+  string Name = 1;
+  int32 Salary = 2;
+}
+
+message CreatedPost
+{
+  int32 Id = 1;
+  string Name = 2;
+  int32 Salary = 3;
 }
 
 message RequestData
@@ -18,4 +235,42 @@ message RequestData
 message ResponceDepartment
 {
   string description = 1;
+}
+
+message EmptyRequest
+{
+  
+}
+
+message DepartmentItem
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message AllDepartment
+{
+  repeated DepartmentItem departments = 1;
+}
+
+message ForUpdateDataDepartment
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message UpdatetDepartment
+{
+  int32 id = 1;
+  string Name = 2;
+}
+
+message StatusDelete
+{
+  string status = 1;
+}
+
+message ForDeleteDepartment
+{
+  int32 id = 1;
 }
