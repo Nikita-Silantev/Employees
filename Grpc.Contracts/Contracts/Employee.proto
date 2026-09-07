@@ -41,7 +41,7 @@ message ItemUpdatedEmployee
 {
   int32 id = 1;
   string f_name = 2;
-  string l_name = 3;
+  string l_name = 3; 
   string m_name = 4;
   string date_birth = 5;
   int32 id_department = 6;
