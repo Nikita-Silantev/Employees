@@ -18,10 +18,14 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="11.0.0-preview.7.26381.103" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-preview.7.26381.103" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-preview.7.26381.103" />
         <PackageReference Include="Npgsql" Version="10.0.3" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
         <PackageReference Include="Google.Protobuf" Version="3.32.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.7.26381.103" />
         <PackageReference Include="Grpc.Tools" Version="2.76.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,5 +38,26 @@
 
     <ItemGroup>
         <Protobuf Include="..\Grpc.Contracts\Contracts\Employee.proto" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="View\MainWindow.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="View\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="appsettings.Development.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

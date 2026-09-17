@@ -228,7 +228,6 @@ message CreatedPost
 
 message RequestData
 {
-  int32 id = 1;
   string Name = 2;
 }
 
