@@ -2,8 +2,13 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ClientEmp.Services;
 using ClientEmp.ViewModels;
+using ClientEmp.ViewModels.UserControlVM;
+using Grpc.Contracts;
+using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClientEmp;
 
@@ -37,7 +42,7 @@ public partial class App : Application
         collection.AddSingleton(sp =>
             new Employees.EmployeesClient(sp.GetRequiredService<GrpcChannel>()));
 
-        collection.AddSingleton<DepartmentService>();
+        collection.AddSingleton<ServiceGrpc>();
         // позже так же: collection.AddSingleton<TaskService>(); и т.д.
 
         collection.AddTransient<MainWindowVM>();

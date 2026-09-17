@@ -1,6 +1,6 @@
-﻿using Avalonia;
+using Avalonia;
 using System;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using Microsoft.Extensions.Configuration;
 
 namespace ClientEmp;
@@ -20,5 +20,5 @@ class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI();
+            .UseReactiveUI(rxui => { });
 }
