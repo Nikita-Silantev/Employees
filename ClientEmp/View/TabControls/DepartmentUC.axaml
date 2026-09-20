@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:ClientEmp.ViewModels.UserControlVM"
+             xmlns:model="clr-namespace:ClientEmp.Models"
+             x:DataType="vm:DepartmentUCVM"
+             x:Class="ClientEmp.View.TabControls.DepartmentUC">
+    <Border Background="Gray" Margin="8" CornerRadius="5">
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- Первый Border -->
+            <Border Grid.Row="0"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12">
+
+                <StackPanel>
+                    <TextBlock Text="Добавление отдела"
+                               Foreground="Black"
+                               Margin="5"
+                               FontSize="14" />
+
+                    <TextBox Watermark="Введите имя отдела" Text="{Binding Name}"
+                             Margin="5" />
+
+                    <Button Content="Добавить"
+                            Command="{Binding AddDepartmentCommand}"
+                            Margin="5" />
+                </StackPanel>
+
+            </Border>
+
+            <!-- Второй Border -->
+            <Border Grid.Row="1"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12,0,12,12">
+                <DataGrid ItemsSource="{Binding Departments}" x:Name="MomDG">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}" Content="X" Background="Red" Foreground="Black" Command="{Binding #MomDG.DataContext.DeleteDepartmentCommand}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" Background="Yellow" Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
+                            </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

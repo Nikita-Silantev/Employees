@@ -36,17 +36,12 @@ public class EmployeeService : Employees.EmployeesBase
 
 
         var createdDepartment = await _repository.CreateDepartment(department);
+        
+        var response = new ResponceDepartment();
+        response.Id = createdDepartment.Id;
+        response.Name = createdDepartment.Name;
 
-        if (createdDepartment != null)
-        {
-            responce.Description = "Successfully Created Department";
-        }
-        else
-        {
-            responce.Description = "Failed Create Department";
-        }
-
-        return responce;
+        return response;
     }
 
     /// <summary>
