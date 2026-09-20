@@ -28,6 +28,7 @@
                              Margin="5" />
 
                     <Button Content="Добавить"
+                            Command="{Binding AddDepartmentCommand}"
                             Margin="5" />
                 </StackPanel>
 
@@ -40,12 +41,27 @@
                     Padding="4"
                     CornerRadius="5"
                     Margin="12,0,12,12">
-                <TableView ItemsSource="{Binding Departments}">
-                    <TableView.Columns>
-                        <TableViewColumn Header = "ID" Binding="{Binding Id}"/>
-                        <TableViewColumn Header = "Name" Binding="{Binding Name}"/>
-                    </TableView.Columns>
-                </TableView>
+                <DataGrid ItemsSource="{Binding Departments}" x:Name="MomDG">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}" Content="X" Background="Red" Foreground="Black" Command="{Binding #MomDG.DataContext.DeleteDepartmentCommand}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button CommandParameter="{Binding}" Background="Yellow" Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
+                            </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Border>
         </Grid>
     </Border>

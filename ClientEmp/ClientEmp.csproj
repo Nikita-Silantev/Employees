@@ -8,9 +8,11 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.2" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
         <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
         <!-- TableView (используется в DepartmentUC) входит в сам пакет Avalonia с версии 12.1, отдельный пакет не нужен. -->
         <!-- Avalonia.Diagnostics снят с поддержки в 12.x (максимум 11.3.20) и заменён на AvaloniaUI.DiagnosticsSupport; в проекте DevTools нигде не вызывались, поэтому пакет просто удалён. Если понадобятся DevTools в Debug — см. заметку в конце файла. -->
         <PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
@@ -18,10 +20,11 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="11.0.0-preview.7.26381.103" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0-preview.7.26381.103" />
         <PackageReference Include="Npgsql" Version="10.0.3" />
-        <PackageReference Include="Fody" Version="6.8.1">
+        <!-- ReactiveUI.Fody депрекейтнут и несовместим с ReactiveUI 24; вместо него - source generators ([Reactive] на приватных полях) -->
+        <PackageReference Include="ReactiveUI.SourceGenerators" Version="3.2.0">
             <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
         <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
         <PackageReference Include="Google.Protobuf" Version="3.32.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.7.26381.103" />
