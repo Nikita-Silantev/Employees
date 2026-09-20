@@ -24,7 +24,7 @@
                                Margin="5"
                                FontSize="14" />
 
-                    <TextBox Watermark="Введите имя отдела"
+                    <TextBox Watermark="Введите имя отдела" Text="{Binding Name}"
                              Margin="5" />
 
                     <Button Content="Добавить"

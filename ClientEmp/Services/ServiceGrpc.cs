@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Grpc.Contracts;
 using Grpc.Net.Client;
@@ -11,10 +12,9 @@ public class ServiceGrpc
 {
     private readonly Employees.EmployeesClient _client;
 
-    public ServiceGrpc()
+    public ServiceGrpc(Employees.EmployeesClient client)
     {
-        var channel = GrpcChannel.ForAddress("https://localhost:7077");
-        _client = new Employees.EmployeesClient(channel);
+        _client =  client;
     }
 
     public async Task<List<Department>> GetAllDepartment()
@@ -30,5 +30,24 @@ public class ServiceGrpc
             });
         }
         return allDepartments;
+    }
+
+    public async Task<Department> CreateDepartment(string name)
+    {
+        try
+        {
+            var request = new RequestData();
+            request.Name = name;
+            var responce = _client.CreateDepartment(request);
+            var createdDepartment = new Department();
+            createdDepartment.Id = responce.Id;
+            createdDepartment.Name = responce.Name;
+            return createdDepartment;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
