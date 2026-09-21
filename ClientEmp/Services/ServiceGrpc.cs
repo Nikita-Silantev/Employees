@@ -5,6 +5,7 @@ using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using ClientEmp.Models;
+using ClientEmp.Models;
 
 namespace ClientEmp.Services;
 
@@ -35,6 +36,27 @@ public class ServiceGrpc
         }
 
         return allDepartments;
+    }
+    
+    /// <summary>
+    /// Gprc запрос на все задачи
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<EmpTask>> GetAllTasks()
+    {
+        var responce = await _client.GetAllTasksAsync(new EmptyRequest());
+        var Tasks = new List<EmpTask>();
+        foreach (var t in responce.AllTasks_)
+        {
+            Tasks.Add(new EmpTask()
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Date_Started = DateTime.Parse(t.DateStarted),
+                Date_End = DateTime.Parse(t.DateEnd)
+            });
+        }
+        return Tasks;
     }
 
     /// <summary>
@@ -104,4 +126,26 @@ public class ServiceGrpc
             throw;
         }
     }
+    /// <summary>
+    /// Создание задачи в gprc на сервере
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="startDate"></param>
+    /// <param name="endDate"></param>
+    /// <returns></returns>
+    public async Task<EmpTask> CreateTask(string name, DateTime startDate, DateTime endDate)
+    {
+        var request = new NewTask();
+        request.Name = name;
+        request.DateStarted = startDate.ToString("yyyy-MM-dd");
+        request.DateEnd = endDate.ToString("yyyy-MM-dd");
+        var responce = await _client.CreateTaskAsync(request);
+        var created = new EmpTask();
+        created.Id = responce.Id;
+        created.Name = responce.Name;
+        created.Date_Started = DateTime.Parse(responce.DateStarted);
+        created.Date_End = DateTime.Parse(responce.DateEnd);
+        return created;
+    }
+
 }
