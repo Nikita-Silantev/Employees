@@ -8,15 +8,16 @@ using Avalonia;
 using ClientEmp.Models;
 using ClientEmp.Services;
 using ReactiveUI;
+using ReactiveUI.Primitives.Signals;
 
 namespace ClientEmp.ViewModels.UserControlVM;
 
 public partial class DepartmentUCVM : ViewModelBase
 {
+    public Interaction<string, RxVoid> ShowMessage { get; set; } = new();
+    
     private readonly ServiceGrpc _service;
 
-    //private bool CanAddDepartment() => true;
-    //TODO разобрать LINQ и сделать блокировку на кнопку добавленя
     [Reactive] private ObservableCollection<Department> _departments = new();
 
     [Reactive] private string _name = string.Empty;
@@ -31,6 +32,7 @@ public partial class DepartmentUCVM : ViewModelBase
         UpdateDepartmentCommand = ReactiveCommand.CreateFromTask<Department>(UpdateDepartment);
         _service = service;
         _ = LoadDepartmentsAsync();
+        
     }
 
     /// <summary>
@@ -48,10 +50,9 @@ public partial class DepartmentUCVM : ViewModelBase
                 Departments.Add(department);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            // TODO: нормальное логирование/отображение ошибки пользователю
-            Console.WriteLine(ex);
+            await ShowMessage.Handle("Не удалось загрузить отделы");
         }
     }
 
@@ -60,16 +61,23 @@ public partial class DepartmentUCVM : ViewModelBase
     /// </summary>
     private async Task AddDepartment()
     {
-        if (_name != "")
+        try
         {
-            var department = new Department();
-            department = await _service.CreateDepartment(Name);
-            Departments.Add(department);
-            Name = "";
+            if (_name != "")
+            {
+                var department = new Department();
+                department = await _service.CreateDepartment(Name);
+                Departments.Add(department);
+                Name = "";
+            }
+            else
+            {
+                await ShowMessage.Handle("Имя отдела не может быть пустым");
+            }
         }
-        else
+        catch
         {
-            return;
+            await ShowMessage.Handle("Не удалось добавить отдел");
         }
     }
 
@@ -79,14 +87,21 @@ public partial class DepartmentUCVM : ViewModelBase
     /// <param name="department"></param>
     private async Task DeleteDepartment(Department department)
     {
-        var result = await _service.DeleteDepartment(department);
-        if (result.Status == "Succsessful Delete Department")
+        try
         {
-            Departments.Remove(department);
+            var result = await _service.DeleteDepartment(department);
+            if (result.Status == "Succsessful Delete Department")
+            {
+                Departments.Remove(department);
+            }
+            else
+            {
+                await ShowMessage.Handle("Ошибка удаления отдела");
+            }
         }
-        else
+        catch
         {
-            return;
+            await ShowMessage.Handle("Не удалось удалить отдел");
         }
     }
 
@@ -96,7 +111,14 @@ public partial class DepartmentUCVM : ViewModelBase
     /// <param name="department"></param>
     private async Task UpdateDepartment(Department department)
     {
-        await _service.UpdateDepartment(department);
-        await LoadDepartmentsAsync();
+        try
+        {
+            await _service.UpdateDepartment(department);
+            await LoadDepartmentsAsync();
+        }
+        catch
+        {
+            await ShowMessage.Handle("Не удалось обновить отдел");
+        }
     }
 }
