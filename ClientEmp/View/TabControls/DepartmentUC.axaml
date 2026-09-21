@@ -44,7 +44,7 @@
                 <DataGrid ItemsSource="{Binding Departments}" x:Name="MomDG">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Имя" Width="*"  Binding="{Binding Name}"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -56,7 +56,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button CommandParameter="{Binding}" Background="Yellow" Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
+                                <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
                             </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate> 
                         </DataGridTemplateColumn>
