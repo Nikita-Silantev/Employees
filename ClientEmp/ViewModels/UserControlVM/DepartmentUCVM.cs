@@ -60,10 +60,17 @@ public partial class DepartmentUCVM : ViewModelBase
     /// </summary>
     private async Task AddDepartment()
     {
-        var department = new Department();
-        department = await _service.CreateDepartment(Name);
-        Departments.Add(department);
-        Name = "";
+        if (_name != "")
+        {
+            var department = new Department();
+            department = await _service.CreateDepartment(Name);
+            Departments.Add(department);
+            Name = "";
+        }
+        else
+        {
+            return;
+        }
     }
 
     /// <summary>
