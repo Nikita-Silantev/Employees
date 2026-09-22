@@ -33,7 +33,7 @@
                     Padding="4"
                     CornerRadius="5"
                     Margin="12,0,12,12">
-                <DataGrid ItemsSource="{Binding TasksCollection}">
+                <DataGrid ItemsSource="{Binding TasksCollection}" x:Name="MomDG">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                         
@@ -52,6 +52,20 @@
                                     <CalendarDatePicker SelectedDate="{Binding Date_End}" IsEnabled="True"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.UpdateTaskCommand}" Content="Обновить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.DeleteTaskCommand}" Content="Удалить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>

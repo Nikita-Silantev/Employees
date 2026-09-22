@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Grpc.Contracts;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,8 @@ public class ServiceGrpc
     {
         _client = client;
     }
+
+    #region Departments
 
     /// <summary>
     /// запрос на все отделы
@@ -36,27 +39,6 @@ public class ServiceGrpc
         }
 
         return allDepartments;
-    }
-    
-    /// <summary>
-    /// Gprc запрос на все задачи
-    /// </summary>
-    /// <returns></returns>
-    public async Task<List<EmpTask>> GetAllTasks()
-    {
-        var responce = await _client.GetAllTasksAsync(new EmptyRequest());
-        var Tasks = new List<EmpTask>();
-        foreach (var t in responce.AllTasks_)
-        {
-            Tasks.Add(new EmpTask()
-            {
-                Id = t.Id,
-                Name = t.Name,
-                Date_Started = DateTime.Parse(t.DateStarted),
-                Date_End = DateTime.Parse(t.DateEnd)
-            });
-        }
-        return Tasks;
     }
 
     /// <summary>
@@ -126,6 +108,11 @@ public class ServiceGrpc
             throw;
         }
     }
+
+    #endregion
+
+    #region Tasks
+
     /// <summary>
     /// Создание задачи в gprc на сервере
     /// </summary>
@@ -148,4 +135,67 @@ public class ServiceGrpc
         return created;
     }
 
+    /// <summary>
+    /// Gprc запрос на все задачи
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<EmpTask>> GetAllTasks()
+    {
+        var responce = await _client.GetAllTasksAsync(new EmptyRequest());
+        var Tasks = new List<EmpTask>();
+        foreach (var t in responce.AllTasks_)
+        {
+            Tasks.Add(new EmpTask()
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Date_Started = DateTime.Parse(t.DateStarted),
+                Date_End = DateTime.Parse(t.DateEnd)
+            });
+        }
+
+        return Tasks;
+    }
+
+    /// <summary>
+    /// Обновить по ID задачу
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public async Task<EmpTask> UpdateTask(EmpTask task)
+    {
+        var request = new NewTaskData();
+        request.Id = task.Id;
+        request.Name = task.Name;
+        request.DateStarted = task.Date_Started?.ToString("yyyy-MM-dd");
+        request.DateEnd = task.Date_End?.ToString("yyyy-MM-dd");
+        var responce = await _client.UpdateTaskAsync(request);
+        var updated = new EmpTask();
+        updated.Id = responce.Id;
+        updated.Name = responce.Name;
+        updated.Date_Started = DateTime.Parse(responce.DateStarted);
+        updated.Date_End = DateTime.Parse(responce.DateEnd);
+        return updated;
+    }
+
+    /// <summary>
+    /// Удаление задачи
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public async Task<string> DeleteTask(EmpTask task)
+    {
+        var request = new DeletedTask()
+        {
+            Id = task.Id,
+            Name = task.Name,
+            DateStarted = task.Date_Started?.ToString("yyyy-MM-dd"),
+            DateEnd = task.Date_End?.ToString("yyyy-MM-dd")
+        };
+        var responce = await _client.DeleteTaskAsync(request);
+        string message = responce.Message;
+        return message;
+    }
+
+    #endregion
 }
