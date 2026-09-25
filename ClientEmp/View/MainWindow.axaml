@@ -15,5 +15,8 @@
         <TabItem Header="Задачи">
             <view:TasksUC></view:TasksUC>
         </TabItem>
+        <TabItem Header="Должности"> 
+            <view:PostUC></view:PostUC>
+        </TabItem>
     </TabControl>
 </Window>

@@ -198,4 +198,79 @@ public class ServiceGrpc
     }
 
     #endregion
+
+    #region Post
+
+    /// <summary>
+    /// Создание должности
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="salary"></param>
+    public async Task CreatePost(string name, int salary)
+    {
+        var request = new NewPost()
+        {
+            Name = name,
+            Salary = salary
+        };
+        var responce = await _client.CreatePostAsync(request);
+    }
+
+    /// <summary>
+    /// Запрос на все отделы
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Post>> GetAllPosts()
+    {
+        var request = new EmptyRequest();
+        var responce = await _client.GetAllPostsAsync(request);
+        var result = new List<Post>();
+        foreach (var i in responce.Posts)
+        {
+            result.Add(new Post()
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Salary = i.Salary
+            });
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Обновление должности
+    /// </summary>
+    /// <param name="post"></param>
+    /// <returns></returns>
+    public async Task<Post> UpdatePost(Post post)
+    {
+        var request = new NewVersionPost()
+        {
+            Id = post.Id,
+            Name = post.Name,
+            Salary = post.Salary
+        };
+
+        var responce = await _client.UpdatePostAsync(request);
+        var result = new Post();
+        result.Id = responce.Id;
+        result.Name = responce.Name;
+        result.Salary = responce.Salary;
+        return result;
+    }
+
+    public async Task<string> DeletePost(Post post)
+    {
+        var request = new DeletedPost()
+        {
+            Id = post.Id,
+            Name = post.Name,
+            Salary = post.Salary
+        };
+        var responce = await _client.DeletePostAsync(request);
+        var result = responce.Message;
+        return result;
+    }
+    #endregion
 }
