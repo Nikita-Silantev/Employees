@@ -47,7 +47,8 @@ public partial class App : Application
 
         collection.AddTransient<MainWindowVM>();
         collection.AddTransient<DepartmentUCVM>();
-        // collection.AddTransient<TasksUCVM>();
+        collection.AddTransient<TasksUCVM>();
+        collection.AddTransient<PostUCVM>();
 
         return collection.BuildServiceProvider();
     }

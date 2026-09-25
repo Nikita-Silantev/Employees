@@ -10,7 +10,7 @@
         Title="Information">
     <Border Margin="14" Padding="8" CornerRadius="4" Background="Gray">
         <StackPanel>
-            <TextBlock Height="200" Width="450" Background="DimGray" Text="{Binding Message}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock Height="200" Width="450" TextWrapping="Wrap" Background="DimGray" Text="{Binding Message}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button Content="OK" HorizontalAlignment="Right" FontWeight="Bold" Command="{Binding CloseWindowCommand}" VerticalAlignment="Center" Margin="5, 14, 5,5 " Width="100" />
         </StackPanel>
     </Border>

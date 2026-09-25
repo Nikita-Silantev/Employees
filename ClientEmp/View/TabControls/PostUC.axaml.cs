@@ -11,13 +11,13 @@ using ReactiveUI.Primitives;
 
 namespace ClientEmp.View.TabControls;
 
-public partial class TasksUC : UserControl
+public partial class PostUC : UserControl
 {
-    public TasksUC()
+    public PostUC()
     {
         InitializeComponent();
         var app = (App)Application.Current!;
-        var vm = app.Services.GetRequiredService<TasksUCVM>();
+        var vm = app.Services.GetRequiredService<PostUCVM>();
         DataContext = vm;
 
         Func<IInteractionContext<string, RxVoid>, Task> handler = async interaction =>

@@ -5,6 +5,71 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:ClientEmp.ViewModels.UserControlVM"
              x:DataType="vm:TasksUCVM"
+             xmlns:models="clr-namespace:ClientEmp.Models"
              x:Class="ClientEmp.View.TabControls.TasksUC">
-    <TextBlock Text="{Binding Word}" Height="36" Width="100" Background="White" Foreground="Black"/>
+    <Border Background="Gray" Margin="8" CornerRadius="5">
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- Первый Border -->
+            <Border Grid.Row="0"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12">
+                <StackPanel>
+                    <TextBlock Text="Добавление задачи" Margin="5"/>
+                    <TextBox Watermark="Введите имя задачи" Text="{Binding Name}" Margin="5"/>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <CalendarDatePicker Margin="0, 0, 5, 0" PlaceholderText="Дата начала задачи" SelectedDate="{Binding DateStart}"/>
+                        <CalendarDatePicker PlaceholderText="Дата конца" SelectedDate="{Binding DateEnd}"/>
+                    </StackPanel>
+                    <Button Content="Добавить" Command="{Binding AddTaskCommand}" Margin="5"/>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12,0,12,12">
+                <DataGrid ItemsSource="{Binding TasksCollection}" x:Name="MomDG">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                        
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        
+                        <DataGridTemplateColumn Header="Начало">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:EmpTask">
+                                    <CalendarDatePicker SelectedDate="{Binding Date_Started}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Конец">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:EmpTask">
+                                    <CalendarDatePicker SelectedDate="{Binding Date_End}" IsEnabled="True"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.UpdateTaskCommand}" Content="Обновить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.DeleteTaskCommand}" Content="Удалить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            </Grid>
+        </Border>
 </UserControl>
