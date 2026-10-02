@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:ClientEmp.ViewModels.UserControlVM"
+             xmlns:model="clr-namespace:ClientEmp.Models"
+             x:DataType="vm:EmployeesUCVM"
+             x:Class="ClientEmp.View.TabControls.EmployeesUC">
+    <Border Background="Gray" Margin="8" CornerRadius="5">
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- Первый Border -->
+            <Border Grid.Row="0"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12">
+                <StackPanel>
+                    <TextBlock Text="Добавление сотрудникаы" Margin="5"/>
+                </StackPanel>
+            </Border>
+            <!-- Второй Border -->
+            <Border Grid.Row="1"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12">
+                <DataGrid ItemsSource="{Binding Employees}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id}" Header="ID" />
+                        <DataGridTextColumn Binding="{Binding LastName}" Header="Фамилия"/>
+                        <DataGridTextColumn Binding="{Binding FirstName}" Header="Имя"/>
+                        <DataGridTextColumn Binding="{Binding MiddleName}" Header="Отчество"/>
+                        <DataGridTemplateColumn Header="Дата рождения">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="model:EmployeeDictionaryItem">
+                                    <CalendarDatePicker SelectedDate="{Binding Date_Birth}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Department}" Header="Отдел"/>
+                        <DataGridTextColumn Binding="{Binding Post}" Header="Должность"/>
+                        <DataGridTextColumn Binding="{Binding Task}" Header="Задача"/>
+                        <DataGridTextColumn Binding="{Binding Rate}" Header="Ставка"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>
