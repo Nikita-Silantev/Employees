@@ -48,17 +48,16 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button CommandParameter="{Binding}" Content="X" Background="Red" Foreground="Black" Command="{Binding #MomDG.DataContext.DeleteDepartmentCommand}"/>
+                                    <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate> 
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button CommandParameter="{Binding}" Content="Удалить" Command="{Binding #MomDG.DataContext.DeleteDepartmentCommand}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button CommandParameter="{Binding}"  Command="{Binding #MomDG.DataContext.UpdateDepartmentCommand}" Content="Обновить"/>
-                            </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate> 
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>

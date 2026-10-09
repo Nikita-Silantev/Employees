@@ -18,5 +18,8 @@
         <TabItem Header="Должности"> 
             <view:PostUC></view:PostUC>
         </TabItem>
+        <TabItem Header="Сотрудники">
+            <view:EmployeesUC/>
+        </TabItem>
     </TabControl>
 </Window>

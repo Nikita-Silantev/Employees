@@ -11,7 +11,7 @@ using ReactiveUI;
 using ReactiveUI.Primitives.Signals;
 
 namespace ClientEmp.ViewModels.UserControlVM;
-
+//для тест комита с рабочего компа!
 public partial class DepartmentUCVM : ViewModelBase
 {
     public Interaction<string, RxVoid> ShowMessage { get; set; } = new();

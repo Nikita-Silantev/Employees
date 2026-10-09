@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:ClientEmp.ViewModels.UserControlVM"
+             xmlns:model="clr-namespace:ClientEmp.Models"
+             x:DataType="vm:EmployeesUCVM"
+             x:Class="ClientEmp.View.TabControls.EmployeesUC">
+    <Border Background="Gray" Margin="8" CornerRadius="5">
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- Первый Border -->
+            <Border Grid.Row="0"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5" Width="250" HorizontalAlignment="Left"
+                    Margin="12">
+                <StackPanel>
+                    <TextBlock Text="Добавление сотрудника" Margin="5"/>
+                    
+                    <TextBox Watermark="Фаимилия" 
+                             Margin="5, 0, 5, 5" 
+                             Width="200" 
+                             HorizontalAlignment="Left"
+                             Text="{Binding EmpLastName}"/>
+                    
+                    <TextBox Watermark="Имя" 
+                             Margin="5, 0, 5, 5" 
+                             Width="200" HorizontalAlignment="Left"
+                             Text="{Binding EmpFirstName}"/>
+                    
+                    <TextBox Watermark="Отчество" 
+                             Margin="5, 0, 5, 5" 
+                             Width="200" HorizontalAlignment="Left"
+                             Text="{Binding EmpMiddleName}"/>
+                    
+                    <CalendarDatePicker PlaceholderText="Дата рождения" 
+                                        Margin="5, 0, 5, 5" 
+                                        SelectedDate="{Binding EmpDateBirth}"/>
+                    
+                    <ComboBox PlaceholderText="Отдел" 
+                              Margin="5, 0, 5, 5" 
+                              ItemsSource="{Binding Departments}" 
+                              SelectedValueBinding="{Binding Id}" 
+                              DisplayMemberBinding="{Binding Name}"
+                              SelectedValue="{Binding IdDepartment}"/>
+                    
+                    <ComboBox PlaceholderText="Должность" 
+                              Margin="5, 0, 5, 5" 
+                              ItemsSource="{Binding Posts}" 
+                              SelectedValueBinding="{Binding Id}" 
+                              DisplayMemberBinding="{Binding Name}"
+                              SelectedValue="{Binding IdPost}"/>
+                    
+                    <ComboBox PlaceholderText="Задача" 
+                              Margin="5, 0, 5, 5"
+                              ItemsSource="{Binding Tasks}" 
+                              SelectedValueBinding="{Binding Id}" 
+                              DisplayMemberBinding="{Binding Name}"
+                              SelectedValue="{Binding IdTask}"/>
+                    
+                    <TextBox Watermark="Ставка" 
+                             Margin="5, 0, 5, 5" Width="200" 
+                             HorizontalAlignment="Left"
+                             Text="{Binding Rate}"/>
+                    <Button Margin="5, 0, 5, 5" Content="Добавить" Command="{Binding AddEmployeeCommand}"/> 
+                    
+                </StackPanel>
+            </Border>
+            <!-- Второй Border -->
+            <Border Grid.Row="1"
+                    BorderThickness="1"
+                    BorderBrush="Black"
+                    Padding="4"
+                    CornerRadius="5"
+                    Margin="12">
+                <DataGrid ItemsSource="{Binding Employees}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id}" Header="ID" />
+                        <DataGridTextColumn Binding="{Binding LastName}" Header="Фамилия"/>
+                        <DataGridTextColumn Binding="{Binding FirstName}" Header="Имя"/>
+                        <DataGridTextColumn Binding="{Binding MiddleName}" Header="Отчество"/>
+                        <DataGridTemplateColumn Header="Дата рождения">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="model:EmployeeDictionaryItem">
+                                    <CalendarDatePicker SelectedDate="{Binding Date_Birth}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Department}" Header="Отдел"/>
+                        <DataGridTextColumn Binding="{Binding Post}" Header="Должность"/>
+                        <DataGridTextColumn Binding="{Binding Task}" Header="Задача"/>
+                        <DataGridTextColumn Binding="{Binding Rate}" Header="Ставка"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

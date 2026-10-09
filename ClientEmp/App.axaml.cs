@@ -49,6 +49,7 @@ public partial class App : Application
         collection.AddTransient<DepartmentUCVM>();
         collection.AddTransient<TasksUCVM>();
         collection.AddTransient<PostUCVM>();
+        collection.AddTransient<EmployeesUCVM>();
 
         return collection.BuildServiceProvider();
     }

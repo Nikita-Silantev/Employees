@@ -272,5 +272,56 @@ public class ServiceGrpc
         var result = responce.Message;
         return result;
     }
+
+    #endregion
+
+    #region Employees
+
+    /// <summary>
+    /// запрос списка сотрудников
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Employee>> GetAllEmployees()
+    {
+        var request = new EmptyRequest();
+        var responce = await _client.GetAllEmployeeAsync(request);
+        var result = new List<Employee>();
+        foreach (var emp in responce.Employees)
+        {
+            result.Add(new Employee()
+            {
+                Id = emp.Id,
+                FirstName = emp.FName,
+                LastName = emp.LName,
+                MiddleName = emp.MName,
+                Date_Birth = DateOnly.Parse(emp.DateBirth, CultureInfo.InvariantCulture),
+                Id_Department = emp.IdDepartment,
+                Id_Post = emp.IdPost,
+                Id_Task = emp.IdTask,
+                Rate = Decimal.Parse(emp.Rate,  CultureInfo.InvariantCulture)
+            });
+        }
+
+        return result;
+    }
+
+    public async Task<string> CreateEmployee(string FirstName, string LastName, string MiddleName, DateTime DateBirth, int IdDepartment, int IdPost,  int IdTask,  string Rate)
+    {
+        var request = new NewEmployee()
+        {
+            FName = FirstName,
+            LName = LastName,
+            MName = MiddleName,
+            DateBirth = DateBirth.ToString("yyyy-MM-dd"),
+            IdDepartment = IdDepartment,
+            IdPost = IdPost,
+            IdTask = IdTask,
+            Rate = Rate.ToString(CultureInfo.InvariantCulture)
+        };
+        var response = await _client.CreateEmployeeAsync(request);
+        string result = response.Message;
+        return result;
+    }
+
     #endregion
 }
