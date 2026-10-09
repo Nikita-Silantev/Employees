@@ -305,5 +305,23 @@ public class ServiceGrpc
         return result;
     }
 
+    public async Task<string> CreateEmployee(string FirstName, string LastName, string MiddleName, DateTime DateBirth, int IdDepartment, int IdPost,  int IdTask,  string Rate)
+    {
+        var request = new NewEmployee()
+        {
+            FName = FirstName,
+            LName = LastName,
+            MName = MiddleName,
+            DateBirth = DateBirth.ToString("yyyy-MM-dd"),
+            IdDepartment = IdDepartment,
+            IdPost = IdPost,
+            IdTask = IdTask,
+            Rate = Rate.ToString(CultureInfo.InvariantCulture)
+        };
+        var response = await _client.CreateEmployeeAsync(request);
+        string result = response.Message;
+        return result;
+    }
+
     #endregion
 }

@@ -29,5 +29,6 @@ public partial class EmployeesUC : UserControl
             interaction.SetOutput(RxVoid.Default);
         };
         vm.ShowMessage.RegisterHandler(handler);
+        AttachedToVisualTree += async (_, __) => vm.LoadAllInfoAboutEmployee();
     }
 }
