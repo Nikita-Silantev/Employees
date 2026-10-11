@@ -350,7 +350,7 @@ public class EmployeeService : Employees.EmployeesBase
         tempEmployee.Id_Department = request.IdDepartment;
         tempEmployee.Id_Post = request.IdPost;
         tempEmployee.Id_Task = request.IdTask;
-        tempEmployee.Rate = Decimal.Parse(request.Rate);
+        tempEmployee.Rate = Decimal.Parse(request.Rate, CultureInfo.InvariantCulture);
 
 
         var causeDepartment = _repository.CheckDepartment(request.IdDepartment);
@@ -480,7 +480,7 @@ public class EmployeeService : Employees.EmployeesBase
         newemp.Id_Department = request.IdDepartment;
         newemp.Id_Post = request.IdPost;
         newemp.Id_Task = request.IdTask;
-        newemp.Rate = Decimal.Parse(request.Rate);
+        newemp.Rate = Decimal.Parse(request.Rate, CultureInfo.InvariantCulture);
 
         var updatedEmployee = await _repository.UpdateEmployee(newemp);
         

@@ -217,7 +217,7 @@ public class ServiceGrpc
     }
 
     /// <summary>
-    /// Запрос на все отделы
+    /// Запрос на все должности
     /// </summary>
     /// <returns></returns>
     public async Task<List<Post>> GetAllPosts()
@@ -304,7 +304,18 @@ public class ServiceGrpc
 
         return result;
     }
-
+    /// <summary>
+    /// Создание сотрудника
+    /// </summary>
+    /// <param name="FirstName"></param>
+    /// <param name="LastName"></param>
+    /// <param name="MiddleName"></param>
+    /// <param name="DateBirth"></param>
+    /// <param name="IdDepartment"></param>
+    /// <param name="IdPost"></param>
+    /// <param name="IdTask"></param>
+    /// <param name="Rate"></param>
+    /// <returns></returns>
     public async Task<string> CreateEmployee(string FirstName, string LastName, string MiddleName, DateTime DateBirth, int IdDepartment, int IdPost,  int IdTask,  string Rate)
     {
         var request = new NewEmployee()
@@ -323,5 +334,38 @@ public class ServiceGrpc
         return result;
     }
 
+    /// <summary>
+    /// Удаление сотрудника
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<string> DeleteEmployee(int id)
+    {
+        var request = new DeleteEmployeeData()
+        {
+            Id = id
+        };
+        var response = await _client.DeleteEmployeeAsync(request);
+        string message = response.Message;
+        return message;
+    }
+
+    public async Task<string> UpdateEmployee(Employee employee)
+    {
+        var request = new NewEmployeeVersion()
+        {
+            Id = employee.Id,
+            FName = employee.FirstName,
+            LName = employee.LastName,
+            MName = employee.MiddleName,
+            DateBirth = employee.Date_Birth.ToString("yyyy-MM-dd"),
+            IdDepartment = employee.Id_Department,
+            IdPost = employee.Id_Post,
+            IdTask = employee.Id_Task,
+            Rate = employee.Rate.ToString(CultureInfo.InvariantCulture)
+        };
+        var response = await _client.UpdateEmployeeAsync(request);
+        return response.Message;
+    }
     #endregion
 }
