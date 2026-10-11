@@ -76,12 +76,16 @@
                     Padding="4"
                     CornerRadius="5"
                     Margin="12">
-                <DataGrid ItemsSource="{Binding Employees}">
+                <DataGrid ItemsSource="{Binding Employees}" x:Name="MomDG">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Id}" Header="ID" />
+                        
                         <DataGridTextColumn Binding="{Binding LastName}" Header="Фамилия"/>
+                        
                         <DataGridTextColumn Binding="{Binding FirstName}" Header="Имя"/>
+                        
                         <DataGridTextColumn Binding="{Binding MiddleName}" Header="Отчество"/>
+                        
                         <DataGridTemplateColumn Header="Дата рождения">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate x:DataType="model:EmployeeDictionaryItem">
@@ -89,10 +93,58 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding Department}" Header="Отдел"/>
-                        <DataGridTextColumn Binding="{Binding Post}" Header="Должность"/>
-                        <DataGridTextColumn Binding="{Binding Task}" Header="Задача"/>
+                        
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding #MomDG.DataContext.Departments}"
+                                              SelectedValueBinding="{Binding Id}"
+                                              DisplayMemberBinding="{Binding Name}"
+                                              SelectedValue="{Binding idDepartment}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding #MomDG.DataContext.Posts}"
+                                              SelectedValueBinding="{Binding Id}"
+                                              DisplayMemberBinding="{Binding Name}"
+                                              SelectedValue="{Binding idPost}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding #MomDG.DataContext.Tasks}"
+                                              SelectedValueBinding="{Binding Id}"
+                                              DisplayMemberBinding="{Binding Name}"
+                                              SelectedValue="{Binding idTask}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
                         <DataGridTextColumn Binding="{Binding Rate}" Header="Ставка"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Удалить" CommandParameter="{Binding}" Command="{Binding #MomDG.DataContext.DeleteEmployeeCommand}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding #MomDG.DataContext.EditEmployeeCommand}" 
+                                            CommandParameter="{Binding}"
+                                            Content="Обновить"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>

@@ -24,9 +24,9 @@ public class Employee
     //Должность
     public int Id_Post { get; set; }
     
-    //Ставка - 0.5 или 0.7 или 1.0
-    public decimal Rate { get; set; }
-    
     //Какой задачей занят - 0 = свободен делать 
     public int Id_Task { get; set; }
+    
+    //Ставка - 0.5 или 0.7 или 1.0
+    public decimal Rate { get; set; }
 }
